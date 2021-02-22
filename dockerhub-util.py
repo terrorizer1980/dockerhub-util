@@ -191,8 +191,7 @@ def get_parser():
         'print-latest-versions': {
             "help": 'Print latest versions of Docker images.',
             "argument_aspects": ["common"],
-            "arguments": {
-            },
+            "arguments": {},
         },
         'sleep': {
             "help": 'Do nothing but sleep. For Docker testing.',
@@ -245,7 +244,7 @@ def get_parser():
                 for argument, argument_value in arguments.items():
                     subcommands[subcommand]['arguments'][argument] = argument_value
 
-    parser = argparse.ArgumentParser(prog="init-container.py", description="Initialize Senzing installation. For more information, see https://github.com/Senzing/docker-init-container")
+    parser = argparse.ArgumentParser(description="Reports from DockerHub. For more information, see https://github.com/Senzing/dockerhub-util")
     subparsers = parser.add_subparsers(dest='subcommand', help='Subcommands (SENZING_SUBCOMMAND):')
 
     for subcommand_key, subcommand_values in subcommands.items():
@@ -276,7 +275,7 @@ MESSAGE_DEBUG = 900
 message_dictionary = {
     "100": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}I",
     "292": "Configuration change detected.  Old: {0} New: {1}",
-    "293": "For information on warnings and errors, see https://github.com/Senzing/stream-loader#errors",
+    "293": "For information on warnings and errors, see https://github.com/Senzing/dockerhub-util",
     "294": "Version: {0}  Updated: {1}",
     "295": "Sleeping infinitely.",
     "296": "Sleeping {0} seconds.",
