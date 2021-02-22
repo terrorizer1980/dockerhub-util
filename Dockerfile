@@ -1,9 +1,9 @@
-ARG BASE_IMAGE=senzing/senzing-base:1.5.2
+ARG BASE_IMAGE=senzing/senzing-base:1.5.5
 FROM ${BASE_IMAGE}
 
-ENV REFRESHED_AT=2020-03-01
+ENV REFRESHED_AT=2021-02-22
 
-LABEL Name="senzing/template" \
+LABEL Name="senzing/dockterhub-util" \
       Maintainer="support@senzing.com" \
       Version="1.0.0"
 
@@ -13,11 +13,15 @@ HEALTHCHECK CMD ["/app/healthcheck.sh"]
 
 USER root
 
-# Install packages via apt.
+# Install packages via PIP.
+
+RUN pip3 install \
+      requests
 
 # Copy files from repository.
 
 COPY ./rootfs /
+COPY ./dockerhub-util.py /app/
 
 # Make non-root container.
 
@@ -25,5 +29,8 @@ USER 1001
 
 # Runtime execution.
 
+ENV SENZING_DOCKER_LAUNCHED=true
+
 WORKDIR /app
-CMD ["/app/sleep-infinity.sh"]
+ENTRYPOINT ["/app/dockerhub-util.py"]
+CMD ["--help"]
