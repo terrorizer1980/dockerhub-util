@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Utilities for working with hub.docker.com registry.
+Utilities for working with hub.docker.com registry and repositories.
 
 ## Overview
 
@@ -67,7 +67,7 @@ For the most part, instructions are copy and paste.
 Whenever thinking is needed, it's marked with a "thinking" icon :thinking:.
 Whenever customization is needed, it's marked with a "pencil" icon :pencil2:.
 If the instructions are not clear, please let us know by opening a new
-[Documentation issue](https://github.com/Senzing/template-python/issues/new?template=documentation_request.md)
+[Documentation issue](https://github.com/Senzing/dockerhub-util/issues/new?template=documentation_request.md)
 describing where we can improve.   Now on with the show...
 
 ### Legend
@@ -256,7 +256,7 @@ The following examples require initialization described in
 The following examples require initialization described in
 [Demonstrate using Docker](#demonstrate-using-docker).
 
-1. Create `knowledge-base/lists/versions-latest.sh`
+1. Print contents of `knowledge-base/lists/versions-latest.sh` to terminal.
    Example:
 
     ```console
