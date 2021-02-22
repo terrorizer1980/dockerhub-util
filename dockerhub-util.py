@@ -1,31 +1,19 @@
 #! /usr/bin/env python3
 
 # -----------------------------------------------------------------------------
-# template-python.py Example python skeleton.
-# Can be used as a boiler-plate to build new python scripts.
-# This skeleton implements the following features:
-#   1) "command subcommand" command line.
-#   2) A structured command line parser and "-help"
-#   3) Configuration via:
-#      3.1) Command line options
-#      3.2) Environment variables
-#      3.3) Configuration file
-#      3.4) Default
-#   4) Messages dictionary
-#   5) Logging and Log Level support.
-#   6) Entry / Exit log messages.
-#   7) Docker support.
+# dockerhub-util.py
 # -----------------------------------------------------------------------------
 
-from glob import glob
 import argparse
 import json
 import linecache
 import logging
 import os
+import requests
 import signal
 import sys
 import time
+from datetime import date
 
 __all__ = []
 __version__ = "1.0.0"  # See https://www.python.org/dev/peps/pep-0396/
@@ -50,15 +38,30 @@ configuration_locator = {
         "env": "SENZING_DEBUG",
         "cli": "debug"
     },
-    "password": {
-        "default": None,
-        "env": "SENZING_PASSWORD",
-        "cli": "password"
+    "dockerhub_api_endpoint_v1": {
+        "default": "https://registry.hub.docker.com/v1",
+        "env": "SENZING_DOCKERHUB_API_ENDPOINT_V1",
+        "cli": "dockerhub-api-endpoint-v1"
     },
-    "senzing_dir": {
-        "default": "/opt/senzing",
-        "env": "SENZING_DIR",
-        "cli": "senzing-dir"
+    "dockerhub_api_endpoint_v2": {
+        "default": "https://hub.docker.com/v2",
+        "env": "SENZING_DOCKERHUB_API_ENDPOINT_V2",
+        "cli": "dockerhub-api-endpoint-v2"
+    },
+    "dockerhub_organization": {
+        "default": "senzing",
+        "env": "SENZING_DOCKERHUB_ORGANIZATION",
+        "cli": "dockerhub-organization"
+    },
+    "dockerhub_password": {
+        "default": None,
+        "env": "SENZING_DOCKERHUB_PASSWORD",
+        "cli": "dockerhub-password"
+    },
+    "dockerhub_username": {
+        "default": None,
+        "env": "SENZING_DOCKERHUB_USERNAME",
+        "cli": "dockerhub-username"
     },
     "sleep_time_in_seconds": {
         "default": 0,
@@ -74,9 +77,108 @@ configuration_locator = {
 # Enumerate keys in 'configuration_locator' that should not be printed to the log.
 
 keys_to_redact = [
-    "password",
+    "dockerhub_password",
 ]
 
+# Docker registries for knowledge-base/lists/versions-latest.sh
+
+dockerhub_repositories_for_latest = {
+    'adminer': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_ADMINER'
+    },
+    'apt': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_APT'
+    },
+    'db2-driver-installer': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_DB2_DRIVER_INSTALLER'
+    },
+    'entity-search-web-app': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_ENTITY_SEARCH_WEB_APP'
+    },
+    'g2command': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_G2COMMAND'
+    },
+    'g2configtool': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_G2CONFIGTOOL'
+    },
+    'g2loader': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_G2LOADER'
+    },
+    'init-container': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_INIT_CONTAINER'
+    },
+    'jupyter': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_JUPYTER'
+    },
+    'phppgadmin': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PHPPGADMIN'
+    },
+    'portainer': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PORTAINER',
+        'version': 'latest'
+    },
+    'postgres': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_POSTGRES',
+        'version': '11.6'
+    },
+    'postgresql-client': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_POSTGRESQL_CLIENT'
+    },
+    'python-demo': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PYTHON_DEMO'
+    },
+    'rabbitmq': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_RABBITMQ',
+        'version': '3.8.2'
+    },
+    'redoer': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_REDOER'
+    },
+    'resolver': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_RESOLVER'
+    },
+    'senzing-api-server': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_API_SERVER'
+    },
+    'senzing-base': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_BASE'
+    },
+    'senzing-console': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_CONSOLE'
+    },
+    'senzing-debug': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_DEBUG'
+    },
+    'sqlite-web': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SQLITE_WEB',
+        'version': 'latest'
+    },
+    'sshd': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SSHD'
+    },
+    'stream-loader': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_STREAM_LOADER'
+    },
+    'stream-logger': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_STREAM_LOGGER'
+    },
+    'stream-producer': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_STREAM_PRODUCER'
+    },
+    'swagger-ui': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SWAGGERAPI_SWAGGER_UI',
+        'version': 'latest'
+    },
+    'web-app-demo': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_WEB_APP_DEMO'
+    },
+    'xterm': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_XTERM'
+    },
+    'yum': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_YUM'
+    }
+}
 # -----------------------------------------------------------------------------
 # Define argument parser
 # -----------------------------------------------------------------------------
@@ -86,26 +188,10 @@ def get_parser():
     ''' Parse commandline arguments. '''
 
     subcommands = {
-        'task1': {
-            "help": 'Example task #1.',
+        'print-latest-versions': {
+            "help": 'Print latest versions of Docker images.',
             "argument_aspects": ["common"],
             "arguments": {
-                "--senzing-dir": {
-                    "dest": "senzing_dir",
-                    "metavar": "SENZING_DIR",
-                    "help": "Location of Senzing. Default: /opt/senzing"
-                },
-            },
-        },
-        'task2': {
-            "help": 'Example task #2.',
-            "argument_aspects": ["common"],
-            "arguments": {
-                "--password": {
-                    "dest": "password",
-                    "metavar": "SENZING_PASSWORD",
-                    "help": "Example of information redacted in the log. Default: None"
-                },
             },
         },
         'sleep': {
@@ -135,10 +221,15 @@ def get_parser():
                 "action": "store_true",
                 "help": "Enable debugging. (SENZING_DEBUG) Default: False"
             },
-            "--engine-configuration-json": {
-                "dest": "engine_configuration_json",
-                "metavar": "SENZING_ENGINE_CONFIGURATION_JSON",
-                "help": "Advanced Senzing engine configuration. Default: none"
+            "--dockerhub-api-endpoint-v1": {
+                "dest": "dockerhub_api_endpoint_v1",
+                "metavar": "SENZING_DOCKERHUB_API_ENDPOINT_V1",
+                "help": "Dockerhub API endpoint Version 1"
+            },
+            "--dockerhub-api-endpoint-v2": {
+                "dest": "dockerhub_api_endpoint_v2",
+                "metavar": "SENZING_DOCKERHUB_API_ENDPOINT_V2",
+                "help": "Dockerhub API endpoint Version 2"
             },
         },
     }
@@ -195,25 +286,11 @@ message_dictionary = {
     "300": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}W",
     "499": "{0}",
     "500": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}E",
-    "695": "Unknown database scheme '{0}' in database url '{1}'",
     "696": "Bad SENZING_SUBCOMMAND: {0}.",
     "697": "No processing done.",
     "698": "Program terminated with error.",
     "699": "{0}",
     "700": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}E",
-    "885": "License has expired.",
-    "886": "G2Engine.addRecord() bad return code: {0}; JSON: {1}",
-    "888": "G2Engine.addRecord() G2ModuleNotInitialized: {0}; JSON: {1}",
-    "889": "G2Engine.addRecord() G2ModuleGenericException: {0}; JSON: {1}",
-    "890": "G2Engine.addRecord() Exception: {0}; JSON: {1}",
-    "891": "Original and new database URLs do not match. Original URL: {0}; Reconstructed URL: {1}",
-    "892": "Could not initialize G2Product with '{0}'. Error: {1}",
-    "893": "Could not initialize G2Hasher with '{0}'. Error: {1}",
-    "894": "Could not initialize G2Diagnostic with '{0}'. Error: {1}",
-    "895": "Could not initialize G2Audit with '{0}'. Error: {1}",
-    "896": "Could not initialize G2ConfigMgr with '{0}'. Error: {1}",
-    "897": "Could not initialize G2Config with '{0}'. Error: {1}",
-    "898": "Could not initialize G2Engine with '{0}'. Error: {1}",
     "899": "{0}",
     "900": "senzing-" + SENZING_PRODUCT_ID + "{0:04d}D",
     "998": "Debugging enabled.",
@@ -314,7 +391,9 @@ def get_configuration(args):
 
     # Special case: Change boolean strings to booleans.
 
-    booleans = ['debug']
+    booleans = [
+        'debug',
+    ]
     for boolean in booleans:
         boolean_value = result.get(boolean)
         if isinstance(boolean_value, str):
@@ -346,10 +425,10 @@ def validate_configuration(config):
 
     subcommand = config.get('subcommand')
 
-    if subcommand in ['task1', 'task2']:
+    if subcommand in ['comments']:
 
-        if not config.get('senzing_dir'):
-            user_error_messages.append(message_error(414))
+        if not config.get('github_access_token'):
+            user_error_messages.append(message_error(701))
 
     # Log warning messages.
 
@@ -381,6 +460,46 @@ def redact_configuration(config):
         except:
             pass
     return result
+
+# -----------------------------------------------------------------------------
+# Class DockerHubClient
+# Inspired by https://github.com/amalfra/docker-hub/blob/master/src/libs/docker_hub_client.py
+# -----------------------------------------------------------------------------
+
+
+class DockerHubClient:
+    """ Wrapper to communicate with docker hub API """
+
+    def __init__(self, config):
+        self.auth_token = config.get('auth_token')
+        self.dockerhub_api_endpoint_v1 = config.get('dockerhub_api_endpoint_v1')
+        self.dockerhub_api_endpoint_v2 = config.get('dockerhub_api_endpoint_v2')
+        self.valid_methods = ['GET', 'POST']
+
+    def do_request(self, url, method='GET', data={}):
+        result = {}
+        if method not in self.valid_methods:
+            raise ValueError('Invalid HTTP request method')
+        headers = {'Content-type': 'application/json'}
+        if self.auth_token:
+            headers['Authorization'] = 'JWT ' + self.auth_token
+        request_method = getattr(requests, method.lower())
+        if len(data) > 0:
+            data = json.dumps(data, indent=2, sort_keys=True)
+            response = request_method(url, data, headers=headers)
+        else:
+            response = request_method(url, headers=headers)
+        if response.status_code == 200:
+            result = json.loads(response.content.decode())
+        return result
+
+    def get_repositories(self, organization):
+        url = '{0}/repositories/{1}/'.format(self.dockerhub_api_endpoint_v2, organization)
+        return self.do_request(url)
+
+    def get_repository_tags(self, organization, repository_name):
+        url = '{0}/repositories/{1}/{2}/tags'.format(self.dockerhub_api_endpoint_v1, organization, repository_name)
+        return self.do_request(url)
 
 # -----------------------------------------------------------------------------
 # Utility functions
@@ -441,6 +560,36 @@ def exit_silently():
     sys.exit(0)
 
 # -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
+
+
+def find_latest_version(version_list):
+    # TODO: Perhaps improve with https://pypi.org/project/semver/
+
+    version_list.remove('latest')
+    return max(version_list)
+
+
+def get_latest_versions(config, dockerhub_repositories):
+
+    result = []
+    organization_default = config.get('dockerhub_organization')
+    dockerhub_client = DockerHubClient(config)
+
+    for key, value in dockerhub_repositories.items():
+        organization = value.get('organization', organization_default)
+        latest_version = value.get('version')
+        if not latest_version:
+            response = dockerhub_client.get_repository_tags(organization, key)
+            version_tags = [x.get('name') for x in response]
+            latest_version = find_latest_version(version_tags)
+        result.append("export {0}={1}".format(value.get('environment_variable'), latest_version))
+
+    result.sort()
+    return result
+
+# -----------------------------------------------------------------------------
 # do_* functions
 #   Common function signature: do_XXX(args)
 # -----------------------------------------------------------------------------
@@ -462,7 +611,7 @@ def do_docker_acceptance_test(args):
     logging.info(exit_template(config))
 
 
-def do_task1(args):
+def do_print_latest_versions(args):
     ''' Do a task. '''
 
     # Get context from CLI, environment variables, and ini files.
@@ -475,28 +624,15 @@ def do_task1(args):
 
     # Do work.
 
-    print("senzing-dir: {senzing_dir}; debug: {debug}".format(**config))
+    response = get_latest_versions(config, dockerhub_repositories_for_latest)
 
-    # Epilog.
+    print("#!/usr/bin/env bash")
+    print("")
+    print("# Generated on {0} by https://github.com/Senzing/dockerhub-util dockerhub-util.py version: {1} update: {2}".format(date.today(), config.get('program_version'), config.get('program_updated')))
+    print("")
 
-    logging.info(exit_template(config))
-
-
-def do_task2(args):
-    ''' Do a task. Print the complete config object'''
-
-    # Get context from CLI, environment variables, and ini files.
-
-    config = get_configuration(args)
-
-    # Prolog.
-
-    logging.info(entry_template(config))
-
-    # Do work.
-
-    config_json = json.dumps(config, sort_keys=True, indent=4)
-    print(config_json)
+    for line in response:
+        print(line)
 
     # Epilog.
 
