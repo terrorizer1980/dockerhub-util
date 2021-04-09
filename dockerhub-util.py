@@ -16,9 +16,9 @@ import time
 from datetime import date
 
 __all__ = []
-__version__ = "1.0.0"  # See https://www.python.org/dev/peps/pep-0396/
+__version__ = "1.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2021-02-22'
-__updated__ = '2021-02-22'
+__updated__ = '2021-04-09'
 
 SENZING_PRODUCT_ID = "5018"  # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 log_format = '%(asctime)s %(message)s'
@@ -566,7 +566,14 @@ def exit_silently():
 def find_latest_version(version_list):
     # TODO: Perhaps improve with https://pypi.org/project/semver/
 
-    version_list.remove('latest')
+    redact_list = [
+        'latest',
+        'experimental'
+    ]
+
+    for redact in redact_list:
+        if redact in version_list:
+            version_list.remove(redact)
     return max(version_list)
 
 
