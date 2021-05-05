@@ -89,6 +89,9 @@ dockerhub_repositories_for_latest = {
     'apt': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_APT'
     },
+    'aptdownloader': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_APT_DOWNLOADER'
+    },
     'db2-driver-installer': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_DB2_DRIVER_INSTALLER'
     },
@@ -177,6 +180,9 @@ dockerhub_repositories_for_latest = {
     },
     'yum': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_YUM'
+    },
+    'yumdownloader': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_YUM_DOWNLOADER'
     }
 }
 # -----------------------------------------------------------------------------
