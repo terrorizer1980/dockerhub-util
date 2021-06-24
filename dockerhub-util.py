@@ -18,7 +18,7 @@ from datetime import date
 __all__ = []
 __version__ = "1.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2021-02-22'
-__updated__ = '2021-06-11'
+__updated__ = '2021-06-23'
 
 SENZING_PRODUCT_ID = "5018"  # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 log_format = '%(asctime)s %(message)s'
@@ -92,6 +92,10 @@ dockerhub_repositories_for_latest = {
     'aptdownloader': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_APT_DOWNLOADER'
     },
+    'db2': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_DB2',
+        'version': '11.5.0.0a'
+    },
     'db2-driver-installer': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_DB2_DRIVER_INSTALLER'
     },
@@ -113,8 +117,36 @@ dockerhub_repositories_for_latest = {
     'jupyter': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_JUPYTER'
     },
+    'kafdrop': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_OBSIDIANDYNAMICS_KAFDROP',
+        'version': '3.23.0'
+    },
+    'kafka': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_BITNAMI_KAFKA',
+        'version': '2.4.0'
+    },
+    'mssql': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MSSQL_SERVER',
+        'version': '2019-GA-ubuntu-16.04'
+    },
+    'mssql-tools': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MSSQL_TOOLS',
+        'version': 'latest'
+    },
+    'mysql': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MYSQL',
+        'version': '5.7'
+    },
+    'mysql-init': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MYSQL',
+        'version': 'latest'
+    },
     'phppgadmin': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PHPPGADMIN'
+    },
+    'phpmyadmin': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PHPMYADMIN',
+        'version': '4.9'
     },
     'portainer': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PORTAINER',
@@ -183,6 +215,10 @@ dockerhub_repositories_for_latest = {
     },
     'yumdownloader': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_YUM_DOWNLOADER'
+    },
+    'zookeeper': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_BITNAMI_ZOOKEEPER',
+        'version': '3.5.6'
     }
 }
 # -----------------------------------------------------------------------------
