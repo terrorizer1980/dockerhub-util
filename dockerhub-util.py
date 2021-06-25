@@ -18,7 +18,7 @@ from datetime import date
 __all__ = []
 __version__ = "1.0.1"  # See https://www.python.org/dev/peps/pep-0396/
 __date__ = '2021-02-22'
-__updated__ = '2021-06-23'
+__updated__ = '2021-06-25'
 
 SENZING_PRODUCT_ID = "5018"  # See https://github.com/Senzing/knowledge-base/blob/master/lists/senzing-product-ids.md
 log_format = '%(asctime)s %(message)s'
@@ -80,145 +80,172 @@ keys_to_redact = [
     "dockerhub_password",
 ]
 
-# Docker registries for knowledge-base/lists/versions-latest.sh
+# Docker registries for knowledge-base/lists/docker-versions-latest.sh
 
 dockerhub_repositories_for_latest = {
     'adminer': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_ADMINER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_ADMINER',
     },
     'apt': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_APT'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_APT',
     },
     'aptdownloader': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_APT_DOWNLOADER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_APT_DOWNLOADER',
     },
-    'db2': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_DB2',
-        'version': '11.5.0.0a'
+    'configurator': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_CONFIGURATOR',
     },
     'db2-driver-installer': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_DB2_DRIVER_INSTALLER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_DB2_DRIVER_INSTALLER',
     },
     'entity-search-web-app': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_ENTITY_SEARCH_WEB_APP'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_ENTITY_SEARCH_WEB_APP',
     },
     'g2command': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_G2COMMAND'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_G2COMMAND',
     },
     'g2configtool': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_G2CONFIGTOOL'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_G2CONFIGTOOL',
     },
     'g2loader': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_G2LOADER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_G2LOADER',
+    },
+    'ibm-db2': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_IBM_DB2',
     },
     'init-container': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_INIT_CONTAINER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_INIT_CONTAINER',
     },
     'jupyter': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_JUPYTER'
-    },
-    'kafdrop': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_OBSIDIANDYNAMICS_KAFDROP',
-        'version': '3.23.0'
-    },
-    'kafka': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_BITNAMI_KAFKA',
-        'version': '2.4.0'
-    },
-    'mssql': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MSSQL_SERVER',
-        'version': '2019-GA-ubuntu-16.04'
-    },
-    'mssql-tools': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MSSQL_TOOLS',
-        'version': 'latest'
-    },
-    'mysql': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MYSQL',
-        'version': '5.7'
-    },
-    'mysql-init': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MYSQL',
-        'version': 'latest'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_JUPYTER',
     },
     'phppgadmin': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PHPPGADMIN'
-    },
-    'phpmyadmin': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PHPMYADMIN',
-        'version': '4.9'
-    },
-    'portainer': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PORTAINER',
-        'version': 'latest'
-    },
-    'postgres': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_POSTGRES',
-        'version': '11.6'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PHPPGADMIN',
     },
     'postgresql-client': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_POSTGRESQL_CLIENT'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_POSTGRESQL_CLIENT',
     },
     'python-demo': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PYTHON_DEMO'
-    },
-    'rabbitmq': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_RABBITMQ',
-        'version': '3.8.2'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PYTHON_DEMO',
     },
     'redoer': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_REDOER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_REDOER',
     },
     'resolver': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_RESOLVER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_RESOLVER',
     },
     'senzing-api-server': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_API_SERVER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_API_SERVER',
     },
     'senzing-base': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_BASE'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_BASE',
     },
     'senzing-console': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_CONSOLE'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_CONSOLE',
     },
     'senzing-debug': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_DEBUG'
-    },
-    'sqlite-web': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SQLITE_WEB',
-        'version': 'latest'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SENZING_DEBUG',
     },
     'sshd': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SSHD'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SSHD',
     },
     'stream-loader': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_STREAM_LOADER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_STREAM_LOADER',
     },
     'stream-logger': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_STREAM_LOGGER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_STREAM_LOGGER',
     },
     'stream-producer': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_STREAM_PRODUCER'
-    },
-    'swagger-ui': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SWAGGERAPI_SWAGGER_UI',
-        'version': 'v3.50.0'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_STREAM_PRODUCER',
     },
     'web-app-demo': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_WEB_APP_DEMO'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_WEB_APP_DEMO',
     },
     'xterm': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_XTERM'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_XTERM',
     },
     'yum': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_YUM'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_YUM',
     },
     'yumdownloader': {
-        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_YUM_DOWNLOADER'
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_YUM_DOWNLOADER',
     },
-    'zookeeper': {
+    'x-confluentinc-cp-kafka': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_CONFLUENTINC_CP_KAFKA',
+        'image': 'confluentinc/cp-kafka',
+        'version': '6.1.2'
+    },
+    'x-ibmcom-db2': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_IBMCOM_DB2',
+        'image': 'ibmcom/db2',
+        'version': '11.5.5.1'
+    },
+    'x-kafdrop': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_OBSIDIANDYNAMICS_KAFDROP',
+        'image': 'obsidiandynamics/kafdrop',
+        'version': '3.27.0'
+    },
+    'x-kafka': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_BITNAMI_KAFKA',
+        'image': 'bitnami/kafka',
+        'version': '2.8.0'
+    },
+    'x-mssql': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MSSQL_SERVER',
+        'image': 'mcr.microsoft.com/mssql/server',
+        'url-versions': "https://mcr.microsoft.com/v2/mssql/server/tags/list",
+        'version': '2019-GA-ubuntu-16.04'
+    },
+    'x-mssql-tools': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MSSQL_TOOLS',
+        'image': 'mcr.microsoft.com/mssql-tools',
+        'reference-url': 'https://hub.docker.com/_/microsoft-mssql-tools',
+        'version': 'latest'
+    },
+    'x-mysql': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_MYSQL',
+        'image': 'bitnami/mysql',
+        'version': '5.7'
+    },
+    'x-mysql-client': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_AREY_MYSQL_CLIENT',
+        'image:': 'arey/mysql-client',
+        'version': 'latest'
+    },
+    'x-phpmyadmin': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PHPMYADMIN',
+        'image': 'bitnami/phpmyadmin',
+        'version': '5.1.1'
+    },
+    'x-portainer': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_PORTAINER',
+        'image': 'portainer/portainer',
+        'version': '1.24.2'
+    },
+    'x-postgres': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_POSTGRES',
+        'image': 'bitnami/postgresql',
+        'version': '11.12'
+    },
+    'x-rabbitmq': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_RABBITMQ',
+        'image': 'bitnami/rabbitmq',
+        'version': '3.8.17'
+    },
+    'x-sqlite-web': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SQLITE_WEB',
+        'image': 'coleifer/sqlite-web',
+        'version': 'latest'
+    },
+    'x-swagger-ui': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_SWAGGERAPI_SWAGGER_UI',
+        'image': 'swaggerapi/swagger-ui',
+        'version': 'v3.51.0'
+    },
+    'x-zookeeper': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_BITNAMI_ZOOKEEPER',
-        'version': '3.5.6'
+        'image': 'bitnami/zookeeper',
+        'version': '3.6.3'
     }
 }
 # -----------------------------------------------------------------------------

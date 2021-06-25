@@ -243,12 +243,12 @@ The following examples require initialization described in
 
 #### Create reports
 
-1. Create `knowledge-base/lists/versions-latest.sh`
+1. Create `knowledge-base/lists/docker-versions-latest.sh`
    Example:
 
     ```console
     ~/senzing.git/dockerhub-util/dockerhub-util.py print-latest-versions \
-        > ~/senzing.git/knowledge-base/lists/versions-latest.sh
+        > ~/senzing.git/knowledge-base/lists/docker-versions-latest.sh
     ```
 
 ### Examples of Docker
@@ -256,7 +256,7 @@ The following examples require initialization described in
 The following examples require initialization described in
 [Demonstrate using Docker](#demonstrate-using-docker).
 
-1. Print contents of `knowledge-base/lists/versions-latest.sh` to terminal.
+1. Print contents of `knowledge-base/lists/docker-versions-latest.sh` to terminal.
    Example:
 
     ```console
