@@ -225,7 +225,7 @@ dockerhub_repositories_for_latest = {
     'x-postgres': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_POSTGRES',
         'image': 'bitnami/postgresql',
-        'version': '11.12'
+        'version': '11.12.0'
     },
     'x-rabbitmq': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_RABBITMQ',
