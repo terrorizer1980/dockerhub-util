@@ -170,6 +170,11 @@ dockerhub_repositories_for_latest = {
     'yumdownloader': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_YUM_DOWNLOADER',
     },
+    'x-busybox': {
+        'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_BUSYBOX',
+        'image': 'busybox',
+        'version': '1.33.1'
+    },
     'x-confluentinc-cp-kafka': {
         'environment_variable': 'SENZING_DOCKER_IMAGE_VERSION_CONFLUENTINC_CP_KAFKA',
         'image': 'confluentinc/cp-kafka',
